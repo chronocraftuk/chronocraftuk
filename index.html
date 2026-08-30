@@ -821,7 +821,17 @@ All rights reserved.
     const SUPABASE_KEY= 'sb_publishable_kQQnUS5qd6zkFivIvNpkLg_UpUwkZOK'
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
   </script>
-  
+  <script>
+    async function loadWatches(){
+    const { data, erro } = await supabaseclinet.from('watches').select('*');
+    }
+    if (error){
+    console.error(Error loading watches: ', error);
+      return;
+    }
+    console.log('Watches loaded:',data);
+    }
+  </script>
 
 
 </body>
