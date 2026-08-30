@@ -823,13 +823,14 @@ All rights reserved.
   </script>
   <script>
     async function loadWatches(){
-    const { data, erro } = await supabaseclinet.from('watches').select('*');
+    const { data, error } = await supabaseClient.from('Watches').select('*');
     }
     if (error){
-    console.error('Error loading watches:',error);
+      console.error('Error loading watches:', error);
       return;
     }
-    console.log('Watches loaded:',data);
+    console.log('Watches loaded:', data);
+    loadWatches(); 
     }
   </script>
 
