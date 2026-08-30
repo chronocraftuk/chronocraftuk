@@ -824,7 +824,7 @@ All rights reserved.
   <script>
     async function loadWatches(){
     const { data, error } = await supabaseClient.from('Watches').select('*');
-    }
+    
     if (error){
       console.error('Error loading watches:', error);
       return;
