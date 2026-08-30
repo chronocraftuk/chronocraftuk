@@ -565,6 +565,7 @@ restoration and precision.
 
 
 <div class="cards">
+  <div id="watch-list"><div>
 
 <div class="card">
 
@@ -829,6 +830,22 @@ All rights reserved.
       return;
     }
     console.log('Watches loaded:', data);
+      const watchlist=document.getElementbyId('watch-list');
+      watchlist.innerHTML='';
+      data.foreach(watch=> {
+        const card=document.createElement('div');
+        card.classname= 'card';
+        const name = document.createElement('h3');
+        name. textContent = watch.name;
+        card.appendChild(name);
+        const price = document.createElement('p');
+        price.textContent = '£' + number(watch.price).toFixed(2);
+        card.appendChild(price);
+        const description = document.createElement('p');
+        description.textContent= watch.description;
+        card.appendChild(description);
+        watchlist.appendChild(card);
+      });
       
     }
     
