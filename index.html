@@ -826,7 +826,7 @@ All rights reserved.
     const { data, erro } = await supabaseclinet.from('watches').select('*');
     }
     if (error){
-    console.error('Error loading watches: ', error);
+    console.error('Error loading watches:',error);
       return;
     }
     console.log('Watches loaded:',data);
