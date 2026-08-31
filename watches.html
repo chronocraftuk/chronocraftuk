@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Watches | ChronoCraftUK</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #070707;
+    color: #f4f4f4;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.6;
+}
+
+header {
+    border-bottom: 1px solid #3d352f;
+    padding: 22px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    color: #c69a78;
+    font-family: Georgia, serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+}
+
+nav a {
+    color: #ffffff;
+    text-decoration: none;
+    margin-left: 30px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #c69a78;
+}
+
+.hero {
+    text-align: center;
+    padding: 70px 20px 45px;
+}
+
+.hero .small-title {
+    color: #c69a78;
+    letter-spacing: 4px;
+    font-size: 12px;
+    margin-bottom: 12px;
+}
+
+.hero h1 {
+    font-family: Georgia, serif;
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.hero p {
+    color: #bdbdbd;
+    max-width: 650px;
+    margin: auto;
+}
+
+.watch-grid {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto 80px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.watch-card {
+    border: 1px solid #403832;
+    background: #111111;
+    padding: 25px;
+    min-height: 220px;
+}
+
+.watch-card h2 {
+    font-family: Georgia, serif;
+    font-size: 25px;
+    margin-bottom: 8px;
+}
+
+.watch-price {
+    color: #c69a78;
+    font-size: 19px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.watch-description {
+    color: #cccccc;
+    font-size: 14px;
+}
+
+.watch-image {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+
+.loading {
+    text-align: center;
+    color: #c69a78;
+    padding: 40px;
+}
+
+footer {
+    border-top: 1px solid #3d352f;
+    text-align: center;
+    padding: 30px;
+    color: #888888;
+    font-size: 13px;
+}
+
+@media (max-width: 700px) {
+    header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    nav a {
+        margin: 0 10px;
+    }
+
+    .hero h1 {
+        font-size: 36px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">CHRONOCRAFTUK</div>
+
+    <nav>
+        <a href="index.html">HOME</a>
+        <a href="watches.html">WATCHES</a>
+        <a href="index.html#restoration">RESTORATION</a>
+        <a href="index.html#about">ABOUT</a>
+        <a href="index.html#contact">CONTACT</a>
+    </nav>
+</header>
+
+<section class="hero">
+    <div class="small-title">CHRONOCRAFTUK</div>
+    <h1>Our Watches</h1>
+    <p>
+        Carefully selected pre-owned, vintage and interesting watches,
+        chosen for their character, craftsmanship and value.
+    </p>
+</section>
+
+<main>
+    <div id="watch-list" class="watch-grid">
+        <div class="loading">Loading watches...</div>
+    </div>
+</main>
+
+<footer>
+    © 2026 ChronoCraftUK. All rights reserved.
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const SUPABASE_URL = 'PASTE_YOUR_SUPABASE_URL_HERE';
+const SUPABASE_KEY = 'PASTE_YOUR_PUBLISHABLE_KEY_HERE';
+
+const supabaseClient = supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+async function loadWatches() {
+
+    const watchList = document.getElementById('watch-list');
+
+    const { data, error } = await supabaseClient
+        .from('Watches')
+        .select('*');
+
+    if (error) {
+        console.error('Error loading watches:', error);
+        watchList.textContent = 'Unable to load watches.';
+        return;
+    }
+
+    watchList.innerHTML = '';
+
+    data.forEach(watch => {
+
+        const card = document.createElement('article');
+        card.className = 'watch-card';
+
+        if (watch.image_url) {
+            const image = document.createElement('img');
+            image.src = watch.image_url;
+            image.alt = watch.name || 'ChronoCraftUK watch';
+            image.className = 'watch-image';
+            card.appendChild(image);
+        }
+
+        const name = document.createElement('h2');
+        name.textContent = watch.name || 'Watch';
+        card.appendChild(name);
+
+        const price = document.createElement('div');
+        price.className = 'watch-price';
+
+        if (watch.price !== null && watch.price !== undefined) {
+            price.textContent = '£' + Number(watch.price).toFixed(2);
+        }
+
+        card.appendChild(price);
+
+        const description = document.createElement('p');
+        description.className = 'watch-description';
+        description.textContent = watch.description || '';
+        card.appendChild(description);
+
+        watchList.appendChild(card);
+    });
+}
+
+loadWatches();
+
+</script>
+
+</body>
+</html>
