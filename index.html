@@ -831,7 +831,7 @@ All rights reserved.
     console.log('Watches loaded:', data);
       const watchlist=document.getElementById('watch-list');
       watchlist.innerHTML='';
-      data.Foreach(watch=> {
+      data.forEach(watch=> {
         const card=document.createElement('div');
         card.classname= 'card';
         const name = document.createElement('h3');
