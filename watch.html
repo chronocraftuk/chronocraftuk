@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Watch | ChronoCraftUK</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #070707;
+            color: #f4f4f4;
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.6;
+        }
+
+        header {
+            border-bottom: 1px solid #3d352f;
+            padding: 24px 40px;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            color: #c69a78;
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .menu a {
+            color: #ffffff;
+            text-decoration: none;
+            margin-left: 25px;
+            font-size: 14px;
+        }
+
+        .watch-container {
+            max-width: 1100px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .back-link {
+            color: #c69a78;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 30px;
+        }
+
+        .watch-details {
+            border: 1px solid #3d352f;
+            padding: 30px;
+        }
+
+        .watch-image {
+            width: 500px;
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto 30px;
+        }
+
+        .watch-name {
+            font-family: Georgia, serif;
+            font-size: 34px;
+            margin-bottom: 10px;
+        }
+
+        .watch-price {
+            color: #c69a78;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .watch-description {
+            color: #cccccc;
+            margin-bottom: 25px;
+        }
+
+        .watch-info {
+            border-top: 1px solid #3d352f;
+            padding-top: 20px;
+        }
+
+        .watch-info p {
+            margin-bottom: 10px;
+        }
+
+        .label {
+            color: #c69a78;
+            font-weight: bold;
+        }
+
+        .loading {
+            text-align: center;
+            color: #c69a78;
+            padding: 60px;
+        }
+
+        footer {
+            border-top: 1px solid #3d352f;
+            text-align: center;
+            padding: 30px;
+            color: #888888;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <nav>
+        <div class="brand">CHRONOCRAFTUK</div>
+
+        <div class="menu">
+            <a href="index.html">HOME</a>
+            <a href="watches.html">WATCHES</a>
+            <a href="index.html#restoration">RESTORATION</a>
+            <a href="index.html#about">ABOUT</a>
+            <a href="index.html#contact">CONTACT</a>
+        </div>
+    </nav>
+</header>
+
+<main class="watch-container">
+
+    <a class="back-link" href="watches.html">← Back to Watches</a>
+
+    <div id="watch-details" class="loading">
+        Loading watch...
+    </div>
+
+</main>
+
+<footer>
+    © 2026 ChronoCraftUK. All rights reserved.
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+    const SUPABASE_URL = 'https://qfadjaplhhdabzgrpvbg.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_kQQnUS5qd6zkFivIvNpkLg_UpUwkZOK';
+
+    const supabaseClient = supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+    async function loadWatch() {
+
+        const watchDetails = document.getElementById('watch-details');
+
+        const params = new URLSearchParams(window.location.search);
+        const watchId = params.get('id');
+
+        if (!watchId) {
+            watchDetails.textContent = 'Watch not found.';
+            return;
+        }
+
+        const { data: watch, error } = await supabaseClient
+            .from('Watches')
+            .select('*')
+            .eq('id', watchId)
+            .single();
+
+        if (error || !watch) {
+            console.error(error);
+            watchDetails.textContent = 'Unable to load this watch.';
+            return;
+        }
+
+        watchDetails.className = 'watch-details';
+        watchDetails.innerHTML = '';
+
+        if (watch.image_url) {
+            const image = document.createElement('img');
+            image.src = watch.image_url;
+            image.alt = watch.name || 'ChronoCraftUK watch';
+            image.className = 'watch-image';
+            watchDetails.appendChild(image);
+        }
+
+        const name = document.createElement('h1');
+        name.className = 'watch-name';
+        name.textContent = watch.name || 'ChronoCraftUK Watch';
+        watchDetails.appendChild(name);
+
+        if (watch.price !== null && watch.price !== undefined) {
+            const price = document.createElement('div');
+            price.className = 'watch-price';
+            price.textContent = '£' + Number(watch.price).toFixed(2);
+            watchDetails.appendChild(price);
+        }
+
+        const description = document.createElement('p');
+        description.className = 'watch-description';
+        description.textContent = watch.description || '';
+        watchDetails.appendChild(description);
+
+        const info = document.createElement('div');
+        info.className = 'watch-info';
+
+        if (watch.brand) {
+            const brand = document.createElement('p');
+            brand.innerHTML = '<span class="label">Brand:</span> ' + watch.brand;
+            info.appendChild(brand);
+        }
+
+        if (watch.status) {
+            const status = document.createElement('p');
+            status.innerHTML = '<span class="label">Status:</span> ' + watch.status;
+            info.appendChild(status);
+        }
+
+        watchDetails.appendChild(info);
+    }
+
+    loadWatch();
+
+</script>
+
+</body>
+</html>
