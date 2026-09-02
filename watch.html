@@ -77,7 +77,29 @@
         .watch-image {
     cursor: zoom-in;
 }
+.lightbox {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.92);
+    align-items: center;
+    justify-content: center;
+}
 
+        .lightbox img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    cursor: zoom-in;
+}
+        .lightbox img.zoomed {
+    transform: scale(2);
+    cursor: zoom-out;
+}
         .watch-name {
             font-family: Georgia, serif;
             font-size: 34px;
@@ -201,13 +223,23 @@
             image.alt = watch.name || 'ChronoCraftUK watch';
             image.className = 'watch-image';
             watchDetails.appendChild(image);
-            image.onclick = () => window.open(image.src, '_blank');
+            image.onclick = () => {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = document.getElementById('lightbox-image');
+    lightboxImage.src = image.src;
+    lightbox.style.display = 'flex';
+};
         }
 
         if (Array.isArray(watch.image_urls)) {
     watch.image_urls.forEach(url => {
         const extraImage = document.createElement('img');
-        extraImage.onclick = () => window.open(extraImage.src, '_blank');
+        extraImage.onclick = () => {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = document.getElementById('lightbox-image');
+    lightboxImage.src = extraImage.src;
+    lightbox.style.display = 'flex';
+};
         extraImage.src = url;
         extraImage.alt = watch.name || 'ChronoCraftUK watch';
         extraImage.className = 'watch-image';
@@ -251,8 +283,19 @@
     }
 
     loadWatch();
-
+document.getElementById('lightbox').onclick = function(event) {
+    if (event.target === this) {
+        this.style.display = 'none';
+    }
+};
+    document.getElementById('lightbox-image').onclick = function(event) {
+    event.stopPropagation();
+    this.classList.toggle('zoomed');
+};
 </script>
 
 </body>
+    <div id="lightbox" class="lightbox">
+        <img id="lightbox-image" src="" alt="Enlarged watch image">
+        </div>
 </html>
