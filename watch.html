@@ -199,6 +199,16 @@
             watchDetails.appendChild(image);
         }
 
+        if (Array.isArray(watch.image_urls)) {
+    watch.image_urls.forEach(url => {
+        const extraImage = document.createElement('img');
+        extraImage.src = url;
+        extraImage.alt = watch.name || 'ChronoCraftUK watch';
+        extraImage.className = 'watch-image';
+        watchDetails.appendChild(extraImage);
+    });
+}
+
         const name = document.createElement('h1');
         name.className = 'watch-name';
         name.textContent = watch.name || 'ChronoCraftUK Watch';
