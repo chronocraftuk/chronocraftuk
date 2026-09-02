@@ -74,6 +74,10 @@
             margin: 0 auto 30px;
         }
 
+        .watch-image {
+    cursor: zoom-in;
+}
+
         .watch-name {
             font-family: Georgia, serif;
             font-size: 34px;
@@ -197,11 +201,13 @@
             image.alt = watch.name || 'ChronoCraftUK watch';
             image.className = 'watch-image';
             watchDetails.appendChild(image);
+            image.onclick = () => window.open(image.src, '_blank');
         }
 
         if (Array.isArray(watch.image_urls)) {
     watch.image_urls.forEach(url => {
         const extraImage = document.createElement('img');
+        extraImage.onclick = () => window.open(extraImage.src, '_blank');
         extraImage.src = url;
         extraImage.alt = watch.name || 'ChronoCraftUK watch';
         extraImage.className = 'watch-image';
