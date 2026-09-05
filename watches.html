@@ -82,35 +82,68 @@ nav a:hover {
 }
 
 .watch-card {
-    border: 1px solid #403832;
-    background: #111111;
-    padding: 25px;
+   border: 1px solid #403832;
+    background: linear-gradient(180deg, #121212 0%, #0c0c0c 100%);
+    padding: 22px;
     min-height: 220px;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.watch-card:hover {
+    transform: translateY(-6px);
+    border-color: #c69a78;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
 }
 
 .watch-card h2 {
     font-family: Georgia, serif;
-    font-size: 25px;
-    margin-bottom: 8px;
+    font-size: 24px;
+    font-weight: normal;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+    color: #f4f4f4;
 }
 
 .watch-price {
     color: #c69a78;
-    font-size: 19px;
+    font-size: 20px;
     font-weight: bold;
-    margin-bottom: 15px;
+    letter-spacing: 0.5px;
+    margin-bottom: 14px;
 }
 
 .watch-description {
-    color: #cccccc;
+    color: #bdbdbd;
     font-size: 14px;
+    line-height: 1.7;
 }
 
 .watch-image {
-    width: 500px;
-    height: auto;
+    width: 100%;
+    height: 260px;
     object-fit: contain;
-    margin: 0 auto 20px;
+    display: block;
+    margin: 0 auto 22px;
+    background: #0a0a0a;
+}
+.view-watch {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 11px 24px;
+    border: 1px solid #c69a78;
+    color: #c69a78;
+    background: transparent;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-size: 12px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+.view-watch:hover {
+    background: #c69a78;
+    color: #070707;
+    box-shadow: 0 0 18px rgba(198, 154, 120, 0.2);
 }
 
 .loading {
@@ -239,6 +272,14 @@ async function loadWatches() {
         description.className = 'watch-description';
         description.textContent = watch.description || '';
         card.appendChild(description);
+        const viewButton = document.createElement('a');
+viewButton.href = 'watch.html?id=' + watch.id;
+viewButton.textContent = 'View Watch';
+viewButton.className = 'view-watch';
+viewButton.addEventListener('click', (event) => {
+    event.stopPropagation();
+});
+card.appendChild(viewButton);
 
         watchList.appendChild(card);
     });
