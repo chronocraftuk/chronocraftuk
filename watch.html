@@ -62,17 +62,29 @@
         }
 
         .watch-details {
-            border: 1px solid #3d352f;
-            padding: 30px;
-        }
+           border: 1px solid #3d352f;
+    background: linear-gradient(180deg, #111111 0%, #0b0b0b 100%);
+    padding: 40px;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.35);
+}
 
         .watch-image {
-            width: 500px;
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 0 auto 30px;
-        }
+.watch-image {
+    width: 100%;
+    max-width: 600px;
+    height: 420px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto 30px;
+    background: #080808;
+    border: 1px solid #29231f;
+    padding: 15px;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.watch-image:hover {
+    border-color: #c69a78;
+}
 
         .watch-image {
     cursor: zoom-in;
@@ -101,17 +113,22 @@
     cursor: zoom-out;
 }
         .watch-name {
-            font-family: Georgia, serif;
-            font-size: 34px;
-            margin-bottom: 10px;
-        }
+    font-family: Georgia, serif;
+    font-size: 38px;
+    font-weight: normal;
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    color: #f4f4f4;
+}
 
         .watch-price {
-            color: #c69a78;
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
+    color: #c69a78;
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+}
         .buy-button {
     display: inline-block;
     background: linear-gradient(135deg, #c69a78, #9b6a48);
@@ -137,18 +154,27 @@
 }
 
         .watch-description {
-            color: #cccccc;
-            margin-bottom: 25px;
-        }
+    color: #c7c7c7;
+    font-size: 15px;
+    line-height: 1.8;
+    margin-bottom: 30px;
+    max-width: 800px;
+}
 
         .watch-info {
-            border-top: 1px solid #3d352f;
-            padding-top: 20px;
-        }
+    border-top: 1px solid #3d352f;
+    margin-top: 5px;
+    padding-top: 25px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px 40px;
+}
 
         .watch-info p {
-            margin-bottom: 10px;
-        }
+    margin: 0;
+    color: #d0d0d0;
+    font-size: 14px;
+}
 
         .label {
             color: #c69a78;
