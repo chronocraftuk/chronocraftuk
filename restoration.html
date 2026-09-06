@@ -495,7 +495,46 @@ const supabaseClient = supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
 );
+async function loadRestorationGallery() {
+    const gallery = document.getElementById('restorationGallery');
 
+    const { data, error } = await supabaseClient
+        .from('Restoration_Gallery')
+        .select('*')
+        .eq('featured', true)
+        .order('display_order', { ascending: true })
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error('Unable to load restoration gallery:', error);
+        return;
+    }
+
+    gallery.innerHTML = '';
+
+    data.forEach(restoration => {
+        const card = document.createElement('div');
+        card.className = 'restore-card';
+
+        card.innerHTML = `
+            <img src="${restoration.before_image_url}" alt="Before restoration">
+            <img src="${restoration.after_image_url}" alt="After restoration">
+
+            <h3>${restoration.title}</h3>
+            <p>${restoration.description || ''}</p>
+
+            ${restoration.video_url ? `
+                <video controls>
+                    <source src="${restoration.video_url}">
+                </video>
+            ` : ''}
+        `;
+
+        gallery.appendChild(card);
+    });
+}
+
+loadRestorationGallery();
   document.getElementById('quoteForm').addEventListener('submit', async function(event) {
     event.preventDefault();
             const name = document.getElementById('name').value;
