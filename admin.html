@@ -788,6 +788,44 @@ supabaseClient.auth.onAuthStateChange((event, session) => {
 });
 
 checkLogin();
+function openMedia(url, type) {
+    const existing = document.getElementById('mediaViewer');
+    if (existing) existing.remove();
+
+    const viewer = document.createElement('div');
+    viewer.id = 'mediaViewer';
+
+    viewer.style.cssText = `
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.95);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 30px;
+        cursor: pointer;
+    `;
+
+    if (type === 'video') {
+        viewer.innerHTML = `
+            <video controls autoplay
+                style="max-width:90%;max-height:90vh;"
+                onclick="event.stopPropagation()">
+                <source src="${url}">
+            </video>
+        `;
+    } else {
+        viewer.innerHTML = `
+            <img src="${url}"
+                style="max-width:90%;max-height:90vh;object-fit:contain;"
+                onclick="event.stopPropagation()">
+        `;
+    }
+
+    viewer.onclick = () => viewer.remove();
+    document.body.appendChild(viewer);
+}    
 </script>
 
 </body>
