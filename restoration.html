@@ -512,6 +512,68 @@ const supabaseClient = supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
 );
+
+  document.getElementById('quoteForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+            const name = document.getElementById('name').value;
+const email = document.getElementById('email').value;
+const phone = document.getElementById('phone').value;
+const watch = document.getElementById('watch').value;
+const message = document.getElementById('message').value;
+            const photos = document.getElementById('photos').files;
+const video = document.getElementById('video').files[0];
+            const requestFolder = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+const photoPaths = [];
+            for (const photo of photos) {
+    const photoPath = `${requestFolder}/photos/${photo.name}`;
+
+    const { error: photoError } = await supabaseClient.storage
+        .from('restoration-requests')
+        .upload(photoPath, photo);
+
+    if (photoError) {
+        console.error('Photo upload error:', photoError);
+        alert('There was a problem uploading your photos.');
+        return;
+    }
+
+    photoPaths.push(photoPath);
+}
+            let videoPath = null;
+
+if (video) {
+    videoPath = `${requestFolder}/video/${video.name}`;
+
+    const { error: videoError } = await supabaseClient.storage
+        .from('restoration-requests')
+        .upload(videoPath, video);
+
+    if (videoError) {
+        console.error('Video upload error:', videoError);
+        alert('There was a problem uploading your video.');
+        return;
+    }
+}
+            const { error } = await supabaseClient
+    .from('Restoration_Requests')
+    .insert([{
+        customer_name: name,
+        email: email,
+        phone: phone,
+        watch_model: watch,
+        message: message
+        photo_urls: JSON.stringify(photoPaths),
+        video_url: videoPath       
+    }]);
+
+if (error) {
+    console.error('Error submitting quote request:', error);
+    alert('Sorry, there was a problem sending your request. Please try again.');
+    return;
+}
+ alert('Thank you. Your restoration quote request has been sent successfully.');
+document.getElementById('quoteForm').reset();           
+});          
             </script>
 
 </body>
