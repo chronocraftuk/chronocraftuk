@@ -432,8 +432,17 @@
     @media (max-width: 800px) {
 
       .menu {
-        display: none;
-      }
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 18px;
+  margin-top: 18px;
+}
+
+.menu a {
+  margin-left: 0;
+  font-size: 12px;
+}
 
       .cards {
         grid-template-columns: 1fr;
