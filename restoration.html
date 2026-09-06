@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ChronoCraftUK | Restoration</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #ffffff;
+    color: #111111;
+    font-family: 'Montserrat', Arial, sans-serif;
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* NAVIGATION */
+
+header {
+    background: rgba(5,5,5,0.97);
+    border-bottom: 1px solid #8c5b2d;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+nav {
+    max-width: 1150px;
+    margin: auto;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand {
+    font-family: 'Cinzel', serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: #d69a55;
+}
+
+.brand span {
+    color: #c9c9c9;
+}
+
+.menu a {
+    margin-left: 25px;
+    font-size: 14px;
+    letter-spacing: 1px;
+    color: #ffffff;
+}
+
+.menu a:hover {
+    color: #d69a55;
+}
+
+/* HERO */
+
+.hero {
+    background: linear-gradient(135deg, #151515, #080808);
+    color: #ffffff;
+    text-align: center;
+    padding: 90px 20px;
+}
+
+.hero img {
+    width: 170px;
+    height: auto;
+    margin-bottom: 25px;
+}
+
+.hero small {
+    display: block;
+    color: #d69a55;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
+
+.hero h1 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(40px, 7vw, 72px);
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    max-width: 760px;
+    margin: 0 auto;
+    color: #ffffff;
+    font-size: 18px;
+}
+
+/* GENERAL */
+
+section {
+    padding: 90px 20px;
+}
+
+.container {
+    max-width: 1150px;
+    margin: auto;
+}
+
+.heading {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.heading small {
+    color: #d69a55;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+}
+
+.heading h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 46px;
+    font-weight: 500;
+    margin-top: 10px;
+}
+
+.heading p {
+    margin-top: 10px;
+    color: #555555;
+}
+
+/* RESTORATION GALLERY */
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.restore-card {
+    background: #111111;
+    color: #ffffff;
+    padding: 25px;
+    border: 1px solid #4b321d;
+}
+
+.restore-card video,
+.restore-card img {
+    width: 100%;
+    display: block;
+    margin-bottom: 20px;
+}
+
+.restore-card h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.restore-card p {
+    color: #ffffff;
+}
+
+/* PROCESS */
+
+.process-section {
+    background: #f7f4ef;
+}
+
+.process {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.step {
+    background: #111111;
+    color: #ffffff;
+    padding: 25px;
+    border-top: 2px solid #a86e36;
+}
+
+.step strong {
+    display: block;
+    color: #d69a55;
+    letter-spacing: 2px;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+.step p {
+    color: #ffffff;
+}
+
+/* QUOTE FORM */
+
+.quote-section {
+    background: linear-gradient(135deg, #1b1109, #080808);
+    color: #ffffff;
+}
+
+.quote-box {
+    max-width: 850px;
+    margin: auto;
+    border: 1px solid #6b4527;
+    padding: 45px;
+}
+
+.quote-box h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 42px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.quote-box > p {
+    text-align: center;
+    margin-bottom: 35px;
+    color: #ffffff;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #d69a55;
+    font-weight: 600;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #6b4527;
+    background: #111111;
+    color: #ffffff;
+    font-family: inherit;
+}
+
+textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+input[type="file"] {
+    padding: 12px;
+}
+
+button {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    background: linear-gradient(135deg, #d69a55, #9b6a48);
+    color: #111111;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+/* FOOTER */
+
+footer {
+    background: #080808;
+    color: #ffffff;
+    text-align: center;
+    padding: 30px 20px;
+    border-top: 1px solid #382515;
+}
+
+footer strong {
+    color: #c78a4c;
+}
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+    nav {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .menu {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+    }
+
+    .menu a {
+        margin-left: 0;
+    }
+
+    .gallery,
+    .process,
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full {
+        grid-column: auto;
+    }
+
+    .quote-box {
+        padding: 30px 20px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<nav>
+    <div class="brand">
+        CHRONOCRAFT<span>UK</span>
+    </div>
+
+    <div class="menu">
+        <a href="index.html">HOME</a>
+        <a href="watches.html">WATCHES</a>
+        <a href="restoration.html">RESTORATION</a>
+        <a href="index.html#about">ABOUT</a>
+        <a href="index.html#contact">CONTACT</a>
+    </div>
+</nav>
+</header>
+
+<section class="hero">
+    <img src="logo 1.png" alt="ChronoCraftUK logo">
+
+    <small>Watch Restoration</small>
+
+    <h1>Restoration</h1>
+
+    <p>
+        Bringing character, craftsmanship and care back to every timepiece.
+        Explore our restoration work or request a personalised quote for your watch.
+    </p>
+</section>
+
+<section>
+<div class="container">
+
+    <div class="heading">
+        <small>Recent Work</small>
+        <h2>Restoration Gallery</h2>
+        <p>See examples of watches being cleaned, prepared and restored.</p>
+    </div>
+
+    <div class="gallery">
+
+        <div class="restore-card">
+            <h3>Your First Restoration</h3>
+            <p>Your first restoration video will appear here.</p>
+        </div>
+
+        <div class="restore-card">
+            <h3>Before & After</h3>
+            <p>Add before and after photographs of completed work.</p>
+        </div>
+
+        <div class="restore-card">
+            <h3>Workshop Detail</h3>
+            <p>Show customers the craftsmanship behind the restoration process.</p>
+        </div>
+
+    </div>
+
+</div>
+</section>
+
+<section class="process-section">
+<div class="container">
+
+    <div class="heading">
+        <small>Our Process</small>
+        <h2>From Assessment to Return</h2>
+    </div>
+
+    <div class="process">
+
+        <div class="step">
+            <strong>01 · ASSESS</strong>
+            <p>We review the watch, photographs, video and the work requested.</p>
+        </div>
+
+        <div class="step">
+            <strong>02 · QUOTE</strong>
+            <p>We provide a quotation before restoration work begins.</p>
+        </div>
+
+        <div class="step">
+            <strong>03 · RESTORE</strong>
+            <p>Approved work is completed carefully with attention to originality and detail.</p>
+        </div>
+
+        <div class="step">
+            <strong>04 · RETURN</strong>
+            <p>Your timepiece is prepared for its next chapter and returned to you.</p>
+        </div>
+
+    </div>
+
+</div>
+</section>
+
+<section class="quote-section">
+<div class="container">
+
+    <div class="quote-box">
+
+        <h2>Request a Restoration Quote</h2>
+
+        <p>
+            Tell us about your watch, what you would like us to look at,
+            and upload photographs or a short video to help us assess the work.
+        </p>
+
+        <form id="quoteForm">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" name="phone">
+                </div>
+
+                <div class="form-group">
+                    <label for="watch">Watch Brand / Model</label>
+                    <input type="text" id="watch" name="watch">
+                </div>
+
+                <div class="form-group full">
+                    <label for="message">What would you like us to look at?</label>
+                    <textarea id="message" name="message" required></textarea>
+                </div>
+
+                <div class="form-group full">
+                    <label for="photos">Upload Photos</label>
+                    <input type="file" id="photos" name="photos" accept="image/*" multiple>
+                </div>
+
+                <div class="form-group full">
+                    <label for="video">Upload Video</label>
+                    <input type="file" id="video" name="video" accept="video/*">
+                </div>
+
+            </div>
+
+            <button type="submit">Send Quote Request</button>
+
+        </form>
+
+    </div>
+
+</div>
+</section>
+
+<footer>
+    © 2026 <strong>ChronoCraftUK</strong>. All rights reserved.
+</footer>
+
+</body>
+</html>
