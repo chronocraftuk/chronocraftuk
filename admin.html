@@ -957,7 +957,77 @@ async function deleteEnquiry(id) {
 
     alert("Enquiry deleted successfully.");
     await loadEnquiries();
-}    
+} 
+ const galleryForm = document.getElementById('galleryForm');
+
+galleryForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const title = document.getElementById('galleryTitle').value.trim();
+    const description = document.getElementById('galleryDescription').value.trim();
+    const beforeFile = document.getElementById('beforeImage').files[0];
+    const afterFile = document.getElementById('afterImage').files[0];
+    const videoFile = document.getElementById('galleryVideo').files[0];
+    const featured = document.getElementById('galleryFeatured').checked;
+    const displayOrder = Number(document.getElementById('galleryDisplayOrder').value || 0);
+
+    if (!beforeFile || !afterFile) {
+        alert('Please select both a before photo and an after photo.');
+        return;
+    }
+
+    const uploadFile = async (file, prefix) => {
+        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+        const filePath = `${Date.now()}-${prefix}-${safeName}`;
+
+        const { error: uploadError } = await supabaseClient.storage
+            .from('restoration-gallery')
+            .upload(filePath, file);
+
+        if (uploadError) {
+            throw uploadError;
+        }
+
+        const { data } = supabaseClient.storage
+            .from('restoration-gallery')
+            .getPublicUrl(filePath);
+
+        return data.publicUrl;
+    };
+
+    try {
+        const beforeUrl = await uploadFile(beforeFile, 'before');
+        const afterUrl = await uploadFile(afterFile, 'after');
+
+        let videoUrl = null;
+
+        if (videoFile) {
+            videoUrl = await uploadFile(videoFile, 'video');
+        }
+
+        const { error } = await supabaseClient
+            .from('Restoration_Gallery')
+            .insert({
+                title: title,
+                description: description,
+                before_image_url: beforeUrl,
+                after_image_url: afterUrl,
+                video_url: videoUrl,
+                featured: featured,
+                display_order: displayOrder
+            });
+
+        if (error) {
+            throw error;
+        }
+
+        alert('Restoration added successfully.');
+        galleryForm.reset();
+
+    } catch (error) {
+        alert('Unable to add restoration: ' + error.message);
+    }
+});   
 </script>
 
 </body>
