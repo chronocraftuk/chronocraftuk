@@ -981,7 +981,7 @@ galleryForm.addEventListener('submit', async (event) => {
         const filePath = `${Date.now()}-${prefix}-${safeName}`;
 
         const { error: uploadError } = await supabaseClient.storage
-            .from('restoration-gallery')
+            .from('restoration_gallery')
             .upload(filePath, file);
 
         if (uploadError) {
@@ -989,7 +989,7 @@ galleryForm.addEventListener('submit', async (event) => {
         }
 
         const { data } = supabaseClient.storage
-            .from('restoration-gallery')
+            .from('restoration_gallery')
             .getPublicUrl(filePath);
 
         return data.publicUrl;
