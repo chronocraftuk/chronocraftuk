@@ -499,7 +499,7 @@
     <button class="tab-button" data-tab="galleryTab">Restoration Gallery</button>
 </div>   
 
-        <div class="dashboard-header">
+       <div id="enquiriesHeader" class="dashboard-header"> 
             
             <div>
                 <h1>Restoration Enquiries</h1>
@@ -659,6 +659,7 @@ function switchTab(tabId) {
 
     document.getElementById(tabId).classList.add('active');
 
+    document.getElementById('enquiriesHeader').style.display = tabId === 'enquiriesTab' ? 'flex' : 'none';
     const activeButton = document.querySelector(`[data-tab="${tabId}"]`);
     if (activeButton) {
         activeButton.classList.add('active');
