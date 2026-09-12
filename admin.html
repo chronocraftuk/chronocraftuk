@@ -13,6 +13,14 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
+
+   .tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}     
         * {
             box-sizing: border-box;
             margin: 0;
@@ -485,6 +493,11 @@
     </section>
 
     <section id="dashboard" class="dashboard">
+     <div class="admin-tabs">
+    <button class="tab-button active" data-tab="enquiriesTab">Restoration Enquiries</button>
+    <button class="tab-button" data-tab="ordersTab">Watch Orders</button>
+    <button class="tab-button" data-tab="galleryTab">Restoration Gallery</button>
+</div>   
 
         <div class="dashboard-header">
             
@@ -503,14 +516,17 @@
                 </button>
             </div>
         </div>
-    <section class="orders-admin">
+        <div id="ordersTab" class="tab-content">
+<section class="orders-admin">  
     <h2>Watch Orders</h2>
     <p>View and manage customer watch purchases.</p>
 
     <div id="ordersList">
         <p>No watch orders yet.</p>
     </div>
-</section>    
+</section> 
+
+<div id="galleryTab" class="tab-content">            
 <section class="gallery-admin">
     <h2>Manage Restoration Gallery</h2>
     <p>Add completed restoration work to your public website gallery.</p>
@@ -548,7 +564,8 @@
     <p>Manage restorations currently shown on the public website.</p>
 
     <div id="galleryAdminList"></div>
-</section>     
+</section>
+</div>
         <div class="stats">
             <div class="stat-card">
                 <span>Total Enquiries</span>
@@ -571,12 +588,13 @@
             </div>
         </div>
 
-        <div id="loading" class="loading">
+       <div id="enquiriesTab" class="tab-content active">
+           <div id="loading" class="loading">
             Loading enquiries...
         </div>
 
         <div id="enquiries" class="enquiries"></div>
-
+       </div>  
     </section>
 
 </main>
@@ -630,7 +648,27 @@ async function showDashboard() {
     await loadEnquiries();
     await loadOrders();
 }
+function switchTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
 
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.classList.remove('active');
+    });
+
+    document.getElementById(tabId).classList.add('active');
+
+    const activeButton = document.querySelector(`[data-tab="${tabId}"]`);
+    if (activeButton) {
+        activeButton.classList.add('active');
+    }
+}
+document.querySelectorAll('.tab-button').forEach(button => {
+    button.addEventListener('click', () => {
+        switchTab(button.dataset.tab);
+    });
+});    
 loginForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
