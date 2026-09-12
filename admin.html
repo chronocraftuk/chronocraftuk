@@ -487,6 +487,7 @@
     <section id="dashboard" class="dashboard">
 
         <div class="dashboard-header">
+            
             <div>
                 <h1>Restoration Enquiries</h1>
                 <p>Manage customer quote requests and restoration work.</p>
@@ -502,6 +503,14 @@
                 </button>
             </div>
         </div>
+    <section class="orders-admin">
+    <h2>Watch Orders</h2>
+    <p>View and manage customer watch purchases.</p>
+
+    <div id="ordersList">
+        <p>No watch orders yet.</p>
+    </div>
+</section>    
 <section class="gallery-admin">
     <h2>Manage Restoration Gallery</h2>
     <p>Add completed restoration work to your public website gallery.</p>
@@ -619,6 +628,7 @@ async function showDashboard() {
     loginSection.style.display = 'none';
     dashboard.style.display = 'block';
     await loadEnquiries();
+    await loadOrders();
 }
 
 loginForm.addEventListener('submit', async (event) => {
@@ -650,6 +660,7 @@ document.getElementById('logoutButton').addEventListener('click', async () => {
 
 document.getElementById('refreshButton').addEventListener('click', async () => {
     await loadEnquiries();
+    await loadOrders();
 });
 
 async function loadEnquiries() {
@@ -686,6 +697,53 @@ async function loadEnquiries() {
         enquiriesContainer.appendChild(card);
     }
 }
+
+async function loadOrders() {
+    const ordersList = document.getElementById('ordersList');
+
+    if (!ordersList) return;
+
+    ordersList.innerHTML = '<p>Loading watch orders...</p>';
+
+    const { data, error } = await supabaseClient
+        .from('Watch_Orders')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        ordersList.innerHTML =
+            '<p>Unable to load watch orders: ' + escapeHtml(error.message) + '</p>';
+        return;
+    }
+
+    if (!data || data.length === 0) {
+        ordersList.innerHTML = '<p>No watch orders yet.</p>';
+        return;
+    }
+
+    ordersList.innerHTML = '';
+
+    data.forEach(order => {
+        const card = document.createElement('div');
+        card.className = 'order-card';
+
+        const amount = order.amount_paid ?? '';
+        const currency = (order.currency || 'gbp').toUpperCase();
+
+        card.innerHTML = `
+            <h3>${escapeHtml(order.watch_name || 'Watch Order')}</h3>
+            <p><strong>Customer:</strong> ${escapeHtml(order.customer_name || '')}</p>
+            <p><strong>Email:</strong> ${escapeHtml(order.email || '')}</p>
+            <p><strong>Phone:</strong> ${escapeHtml(order.phone || '')}</p>
+            <p><strong>Amount:</strong> ${escapeHtml(String(amount))} ${escapeHtml(currency)}</p>
+            <p><strong>Payment:</strong> ${escapeHtml(order.payment_status || '')}</p>
+            <p><strong>Order Status:</strong> ${escapeHtml(order.order_status || '')}</p>
+            <p><strong>Date:</strong> ${order.created_at ? new Date(order.created_at).toLocaleString() : ''}</p>
+        `;
+
+        ordersList.appendChild(card);
+    });
+}    
 
 function updateStats(data) {
     document.getElementById('totalCount').textContent = data.length;
