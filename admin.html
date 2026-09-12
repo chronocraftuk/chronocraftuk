@@ -706,7 +706,7 @@ async function loadOrders() {
     ordersList.innerHTML = '<p>Loading watch orders...</p>';
 
     const { data, error } = await supabaseClient
-        .from('Watch_Orders')
+        .from('Watch_Order')
         .select('*')
         .order('created_at', { ascending: false });
 
