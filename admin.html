@@ -519,7 +519,48 @@
 .tab-button.active {
     background: #c9945d;
     color: #111111;
-}       
+}
+
+.order-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.order-action-button,
+.cancel-order-button {
+    display: inline-block;
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.order-action-button {
+    background: #b88952;
+    color: #111;
+    border: 1px solid #b88952;
+}
+
+.cancel-order-button {
+    background: transparent;
+    color: #e6c49a;
+    border: 1px solid #9b4a4a;
+}
+
+.order-action-button:hover {
+    background: #d0a46e;
+}
+
+.cancel-order-button:hover {
+    background: #9b4a4a;
+    color: #fff;
+}        
     </style>
 </head>
 
@@ -864,6 +905,18 @@ async function loadOrders() {
         </option>
     `).join('')}
 </select>
+<div class="order-actions">
+    <a class="order-action-button"
+       href="mailto:${encodeURIComponent(order.email || '')}?subject=${encodeURIComponent('Your ChronoCraftUK watch order')}">
+        Email Customer
+    </a>
+
+    <button type="button"
+            class="cancel-order-button"
+            onclick="cancelOrder('${order.id}')">
+        Cancel Order
+    </button>
+</div>
             <p><strong>Date:</strong> ${order.created_at ? new Date(order.created_at).toLocaleString() : ''}</p>
         `;
 
@@ -871,7 +924,31 @@ async function loadOrders() {
     });
 }    
 
-async function updateOrderStatus(orderId, newStatus) {
+async function cancelOrder(orderId) {
+    const confirmed = confirm(
+        'Are you sure you want to cancel this order? The order will remain saved for your records.'
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const { error } = await supabaseClient
+        .from('Watch_Order')
+        .update({ order_status: 'Cancelled' })
+        .eq('id', orderId);
+
+    if (error) {
+        console.error('Error cancelling order:', error);
+        alert('The order could not be cancelled. Please try again.');
+        return;
+    }
+
+    alert('The order has been cancelled and retained for your records.');
+    location.reload();
+}
+    
+    async function updateOrderStatus(orderId, newStatus) {
     const { error } = await supabaseClient
         .from('Watch_Order')
         .update({ order_status: newStatus })
