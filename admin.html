@@ -609,6 +609,7 @@
     <button class="tab-button active" data-tab="enquiriesTab">Restoration Enquiries</button>
     <button class="tab-button" data-tab="ordersTab">Watch Orders</button>
     <button class="tab-button" data-tab="galleryTab">Restoration Gallery</button>
+    <button class="tab-button" data-tab="inventoryTab">Watch Inventory</button>     
 </div>   
 
        <div id="enquiriesHeader" class="dashboard-header"> 
@@ -678,6 +679,115 @@
     <div id="galleryAdminList"></div>
 </section>
 </div>
+ <div id="inventoryTab" class="tab-content">
+
+    <section class="gallery-admin">
+        <h2>Watch Inventory</h2>
+
+        <p>
+            Add watches for sale and manage their availability on the
+            ChronoCraftUK website.
+        </p>
+
+        <form id="watchInventoryForm">
+
+            <input type="hidden" id="inventoryWatchId">
+
+            <label for="inventoryName">Watch Name</label>
+            <input type="text"
+                   id="inventoryName"
+                   required>
+
+            <label for="inventoryBrand">Brand</label>
+            <input type="text"
+                   id="inventoryBrand"
+                   required>
+
+            <label for="inventoryModel">Model</label>
+            <input type="text"
+                   id="inventoryModel"
+                   required>
+
+            <label for="inventoryPrice">Price (£)</label>
+            <input type="number"
+                   id="inventoryPrice"
+                   min="0"
+                   step="0.01"
+                   required>
+
+            <label for="inventoryCondition">Condition</label>
+            <input type="text"
+                   id="inventoryCondition"
+                   placeholder="For example: Pre-owned – Excellent"
+                   required>
+
+            <label for="inventoryDescription">Description</label>
+            <textarea id="inventoryDescription"
+                      required></textarea>
+
+            <label for="inventoryStatus">Status</label>
+            <select id="inventoryStatus" required>
+                <option value="Available">Available</option>
+                <option value="Reserved">Reserved</option>
+                <option value="Sold">Sold</option>
+                <option value="Hidden">Hidden</option>
+            </select>
+
+            <label>
+                <input type="checkbox" id="inventoryFeatured">
+                Featured watch
+            </label>
+
+            <label for="inventoryStripeLink">
+                Stripe Payment Link
+            </label>
+            <input type="url"
+                   id="inventoryStripeLink"
+                   placeholder="https://buy.stripe.com/...">
+
+            <label for="inventoryPrimaryImage">
+                Primary Watch Photo
+            </label>
+            <input type="file"
+                   id="inventoryPrimaryImage"
+                   accept="image/*">
+
+            <label for="inventoryAdditionalImages">
+                Additional Watch Photos
+            </label>
+            <input type="file"
+                   id="inventoryAdditionalImages"
+                   accept="image/*"
+                   multiple>
+
+            <button type="submit" class="primary-button">
+                Save Watch
+            </button>
+
+            <button type="button"
+                    id="clearWatchFormButton"
+                    class="small-button">
+                Clear Form
+            </button>
+
+            <div id="watchInventoryMessage"
+                 class="error-message"></div>
+
+        </form>
+    </section>
+
+    <section class="gallery-admin-list">
+        <h2>Existing Watches</h2>
+
+        <p>
+            Change a watch to Sold, Reserved or Hidden while retaining
+            its details in your management records.
+        </p>
+
+        <div id="watchInventoryList"></div>
+    </section>
+
+</div>       
         <div id="enquiriesTab" class="tab-content active">
             <div class="stats">
             <div class="stat-card">
@@ -776,6 +886,9 @@ function switchTab(tabId) {
     if (activeButton) {
         activeButton.classList.add('active');
     }
+   if (tabId === 'inventoryTab') {
+    loadWatchInventory();
+} 
 }
 document.querySelectorAll('.tab-button').forEach(button => {
     button.addEventListener('click', () => {
@@ -1154,7 +1267,322 @@ async function buildVideoLink(videoPath) {
     `;
 }
 
-function formatStatus(status) {
+async function uploadWatchImage(file) {
+    const safeFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '-');
+    const filePath = `watches/${Date.now()}-${safeFileName}`;
+
+    const { error: uploadError } = await supabaseClient.storage
+        .from('restoration-gallery')
+        .upload(filePath, file);
+
+    if (uploadError) {
+        throw uploadError;
+    }
+
+    const { data } = supabaseClient.storage
+        .from('restoration-gallery')
+        .getPublicUrl(filePath);
+
+    return data.publicUrl;
+}
+ async function loadWatchInventory() {
+    const watchInventoryList =
+        document.getElementById('watchInventoryList');
+
+    watchInventoryList.innerHTML = '<p>Loading watches...</p>';
+
+    const { data, error } = await supabaseClient
+        .from('Watches')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error('Error loading watch inventory:', error);
+        watchInventoryList.innerHTML =
+            '<p class="error-message">Unable to load watches.</p>';
+        return;
+    }
+
+    if (!data || data.length === 0) {
+        watchInventoryList.innerHTML = '<p>No watches added yet.</p>';
+        return;
+    }
+
+    watchInventoryList.innerHTML = data.map(watch => {
+        const status = watch.status || 'Available';
+        const image = watch.image_url
+            ? `<img src="${escapeHtml(watch.image_url)}"
+                    alt="${escapeHtml(watch.name || 'Watch')}"
+                    style="width:120px; height:120px; object-fit:cover;">`
+            : '<div>No image</div>';
+
+        return `
+            <article class="order-card">
+                ${image}
+
+                <h3>${escapeHtml(watch.name || 'Unnamed watch')}</h3>
+
+                <p>
+                    <strong>Brand:</strong>
+                    ${escapeHtml(watch.brand || 'Not provided')}
+                </p>
+
+                <p>
+                    <strong>Model:</strong>
+                    ${escapeHtml(watch.model || 'Not provided')}
+                </p>
+
+                <p>
+                    <strong>Price:</strong>
+                    £${Number(watch.price || 0).toFixed(2)}
+                </p>
+
+                <label>
+                    <strong>Status:</strong>
+                    <select
+                        onchange="updateWatchInventoryStatus(
+                            '${watch.id}',
+                            this.value
+                        )"
+                    >
+                        <option value="Available"
+                            ${status === 'Available' ? 'selected' : ''}>
+                            Available
+                        </option>
+
+                        <option value="Reserved"
+                            ${status === 'Reserved' ? 'selected' : ''}>
+                            Reserved
+                        </option>
+
+                        <option value="Sold"
+                            ${status === 'Sold' ? 'selected' : ''}>
+                            Sold
+                        </option>
+
+                        <option value="Hidden"
+                            ${status === 'Hidden' ? 'selected' : ''}>
+                            Hidden
+                        </option>
+                    </select>
+                </label>
+
+                <div class="order-actions">
+                    <button
+                        type="button"
+                        class="small-button"
+                        onclick="editWatchInventoryItem('${watch.id}')"
+                    >
+                        Edit
+                    </button>
+
+                    <button
+                        type="button"
+                        class="small-button"
+                        onclick="hideWatchInventoryItem('${watch.id}')"
+                    >
+                        Remove from Website
+                    </button>
+                </div>
+            </article>
+        `;
+    }).join('');
+}
+async function updateWatchInventoryStatus(watchId, newStatus) {
+    const { error } = await supabaseClient
+        .from('Watches')
+        .update({ status: newStatus })
+        .eq('id', watchId);
+
+    if (error) {
+        console.error('Error updating watch status:', error);
+        alert('The watch status could not be updated.');
+        await loadWatchInventory();
+        return;
+    }
+
+    alert(`Watch status changed to ${newStatus}.`);
+    await loadWatchInventory();
+}
+
+async function hideWatchInventoryItem(watchId) {
+    const confirmed = confirm(
+        'Remove this watch from the public website? Its details will remain in your management records.'
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    await updateWatchInventoryStatus(watchId, 'Hidden');
+}
+async function editWatchInventoryItem(watchId) {
+    const { data: watch, error } = await supabaseClient
+        .from('Watches')
+        .select('*')
+        .eq('id', watchId)
+        .single();
+
+    if (error || !watch) {
+        console.error('Error loading watch:', error);
+        alert('The watch details could not be loaded.');
+        return;
+    }
+
+    document.getElementById('inventoryWatchId').value = watch.id;
+    document.getElementById('inventoryName').value = watch.name || '';
+    document.getElementById('inventoryBrand').value = watch.brand || '';
+    document.getElementById('inventoryModel').value = watch.model || '';
+    document.getElementById('inventoryPrice').value = watch.price || '';
+    document.getElementById('inventoryCondition').value =
+        watch.condition || '';
+    document.getElementById('inventoryDescription').value =
+        watch.description || '';
+    document.getElementById('inventoryStatus').value =
+        watch.status || 'Available';
+    document.getElementById('inventoryFeatured').checked =
+        Boolean(watch.featured);
+    document.getElementById('inventoryStripeLink').value =
+        watch.stripe_link || '';
+
+    document.getElementById('watchInventoryForm').scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+    });
+}
+document.getElementById('watchInventoryForm').addEventListener(
+    'submit',
+    async (event) => {
+        event.preventDefault();
+
+        const message =
+            document.getElementById('watchInventoryMessage');
+        const watchId =
+            document.getElementById('inventoryWatchId').value;
+        const primaryImage =
+            document.getElementById('inventoryPrimaryImage').files[0];
+        const additionalImages = Array.from(
+            document.getElementById('inventoryAdditionalImages').files
+        );
+
+        message.textContent = 'Saving watch...';
+
+        try {
+            let existingWatch = null;
+
+            if (watchId) {
+                const { data, error } = await supabaseClient
+                    .from('Watches')
+                    .select('image_url, image_urls')
+                    .eq('id', watchId)
+                    .single();
+
+                if (error) {
+                    throw error;
+                }
+
+                existingWatch = data;
+            }
+
+            let imageUrl = existingWatch?.image_url || '';
+            let imageUrls = existingWatch?.image_urls || [];
+
+            if (primaryImage) {
+                imageUrl = await uploadWatchImage(primaryImage);
+            }
+
+            if (!watchId && !imageUrl) {
+                throw new Error(
+                    'Please select a main photograph for the watch.'
+                );
+            }
+
+            for (const file of additionalImages) {
+                const uploadedUrl = await uploadWatchImage(file);
+                imageUrls.push(uploadedUrl);
+            }
+
+            const watchDetails = {
+                name: document
+                    .getElementById('inventoryName')
+                    .value
+                    .trim(),
+                brand: document
+                    .getElementById('inventoryBrand')
+                    .value
+                    .trim(),
+                model: document
+                    .getElementById('inventoryModel')
+                    .value
+                    .trim(),
+                price: Number(
+                    document.getElementById('inventoryPrice').value
+                ),
+                condition: document
+                    .getElementById('inventoryCondition')
+                    .value
+                    .trim(),
+                description: document
+                    .getElementById('inventoryDescription')
+                    .value
+                    .trim(),
+                status:
+                    document.getElementById('inventoryStatus').value,
+                featured:
+                    document.getElementById('inventoryFeatured').checked,
+                stripe_link: document
+                    .getElementById('inventoryStripeLink')
+                    .value
+                    .trim(),
+                image_url: imageUrl,
+                image_urls: imageUrls
+            };
+
+            let saveError;
+
+            if (watchId) {
+                const { error } = await supabaseClient
+                    .from('Watches')
+                    .update(watchDetails)
+                    .eq('id', watchId);
+
+                saveError = error;
+            } else {
+                const { error } = await supabaseClient
+                    .from('Watches')
+                    .insert([watchDetails]);
+
+                saveError = error;
+            }
+
+            if (saveError) {
+                throw saveError;
+            }
+
+            document.getElementById('watchInventoryForm').reset();
+            document.getElementById('inventoryWatchId').value = '';
+            message.textContent = watchId
+                ? 'Watch updated successfully.'
+                : 'Watch added successfully.';
+
+            await loadWatchInventory();
+        } catch (error) {
+            console.error('Error saving watch:', error);
+            message.textContent =
+                error.message || 'The watch could not be saved.';
+        }
+    }
+);
+
+document.getElementById('clearWatchInventoryForm').addEventListener(
+    'click',
+    () => {
+        document.getElementById('watchInventoryForm').reset();
+        document.getElementById('inventoryWatchId').value = '';
+        document.getElementById('watchInventoryMessage').textContent = '';
+    }
+);    
+    function formatStatus(status) {
     return status
         .split(' ')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
