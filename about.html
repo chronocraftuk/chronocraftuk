@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>About ChronoCraftUK</title>
+
+    <meta name="description"
+          content="Learn about ChronoCraftUK, an independent UK watch business offering carefully selected watches and restoration services.">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #111111;
+            color: #f5f1eb;
+            font-family: Arial, sans-serif;
+            line-height: 1.7;
+        }
+
+        header {
+            background: #171717;
+            border-bottom: 1px solid #6b5542;
+            padding: 18px 7%;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 30px;
+        }
+
+        .brand {
+            color: #c99a68;
+            font-family: Georgia, serif;
+            font-size: 20px;
+            letter-spacing: 3px;
+            text-decoration: none;
+        }
+
+        .menu {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .menu a {
+            color: #f5f1eb;
+            font-size: 13px;
+            letter-spacing: 1.5px;
+            text-decoration: none;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            color: #c99a68;
+        }
+
+        .hero {
+            min-height: 520px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 80px 20px;
+            background:
+                radial-gradient(circle at center, #29231e 0%, #171717 48%, #101010 100%);
+            border-bottom: 1px solid #3b3028;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero-logo {
+            width: 260px;
+            max-width: 80%;
+            height: auto;
+            margin-bottom: 25px;
+        }
+
+        .eyebrow {
+            color: #c99a68;
+            font-size: 12px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: Georgia, serif;
+            font-weight: normal;
+        }
+
+        h1 {
+            font-size: clamp(42px, 7vw, 72px);
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            max-width: 680px;
+            margin: 0 auto;
+            color: #d2cbc3;
+            font-size: 17px;
+        }
+
+        .about-section {
+            background: #f3eee7;
+            color: #251f1a;
+            padding: 90px 7%;
+        }
+
+        .about-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 70px;
+            align-items: start;
+        }
+
+        .section-label {
+            color: #8b5f38;
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .about-section h2 {
+            font-size: clamp(34px, 5vw, 52px);
+            line-height: 1.15;
+            margin-bottom: 25px;
+        }
+
+        .about-copy p {
+            margin-bottom: 18px;
+            color: #554a40;
+            font-size: 17px;
+        }
+
+        .values {
+            display: grid;
+            gap: 18px;
+        }
+
+        .value-card {
+            background: #ffffff;
+            border-left: 4px solid #b88952;
+            padding: 24px;
+            box-shadow: 0 8px 25px rgba(45, 35, 25, 0.08);
+        }
+
+        .value-card h3 {
+            color: #6b4628;
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+
+        .value-card p {
+            color: #62574e;
+        }
+
+        .services {
+            padding: 90px 7%;
+            background: #171717;
+        }
+
+        .services-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .services h2 {
+            font-size: clamp(34px, 5vw, 50px);
+            margin-bottom: 45px;
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .service-card {
+            background: #202020;
+            border: 1px solid #594737;
+            padding: 34px 25px;
+        }
+
+        .service-card h3 {
+            color: #c99a68;
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+
+        .service-card p {
+            color: #cfc8c0;
+        }
+
+        .contact-strip {
+            background: #b88952;
+            color: #17120e;
+            padding: 55px 20px;
+            text-align: center;
+        }
+
+        .contact-strip h2 {
+            font-size: 34px;
+            margin-bottom: 12px;
+        }
+
+        .contact-strip p {
+            margin-bottom: 24px;
+        }
+
+        .contact-button {
+            display: inline-block;
+            background: #171717;
+            color: #ffffff;
+            padding: 13px 24px;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        footer {
+            background: #0c0c0c;
+            color: #bcb4ac;
+            text-align: center;
+            padding: 35px 20px;
+            border-top: 1px solid #3b3028;
+        }
+
+        footer strong {
+            color: #b88952;
+            letter-spacing: 2px;
+        }
+
+        @media (max-width: 760px) {
+            nav {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .menu {
+                justify-content: center;
+                gap: 15px;
+            }
+
+            .about-grid,
+            .service-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .about-grid {
+                gap: 40px;
+            }
+
+            .hero {
+                min-height: auto;
+                padding: 65px 20px;
+            }
+
+            .hero-logo {
+                width: 220px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <nav>
+        <a class="brand" href="index.html">CHRONOCRAFTUK</a>
+
+        <div class="menu">
+            <a href="index.html">HOME</a>
+            <a href="watches.html">WATCHES</a>
+            <a href="restoration.html">RESTORATION</a>
+            <a class="active" href="about.html">ABOUT</a>
+            <a href="index.html#contact">CONTACT</a>
+        </div>
+    </nav>
+</header>
+
+<main>
+
+    <section class="hero">
+        <div class="hero-content">
+            <img class="hero-logo"
+                 src="logo 2.png"
+                 alt="ChronoCraftUK logo">
+
+            <div class="eyebrow">Our Story</div>
+
+            <h1>About ChronoCraftUK</h1>
+
+            <p>
+                An independent UK watch business built around a genuine
+                appreciation for craftsmanship, character and the stories
+                carried by every timepiece.
+            </p>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <div class="about-grid">
+
+            <div class="about-copy">
+                <div class="section-label">Who We Are</div>
+
+                <h2>A personal approach to watches</h2>
+
+                <p>
+                    ChronoCraftUK specialises in carefully selected watches
+                    and restoration work that helps bring character and
+                    enjoyment back to each timepiece.
+                </p>
+
+                <p>
+                    Whether you are purchasing a watch or asking us to assess
+                    a restoration, you will receive clear information,
+                    honest communication and personal service throughout.
+                </p>
+
+                <p>
+                    Our aim is simple: to give every customer confidence in
+                    the watch they choose and the service they receive.
+                </p>
+            </div>
+
+            <div class="values">
+
+                <article class="value-card">
+                    <h3>Honest Communication</h3>
+                    <p>
+                        Clear descriptions, straightforward updates and no
+                        unnecessary jargon.
+                    </p>
+                </article>
+
+                <article class="value-card">
+                    <h3>Care and Attention</h3>
+                    <p>
+                        Every watch is treated individually, with respect for
+                        its condition, character and history.
+                    </p>
+                </article>
+
+                <article class="value-card">
+                    <h3>Personal Service</h3>
+                    <p>
+                        Customers deal directly with ChronoCraftUK from their
+                        first enquiry through to purchase or return.
+                    </p>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="services">
+        <div class="services-inner">
+
+            <div class="eyebrow">What We Offer</div>
+            <h2>Watches and restoration</h2>
+
+            <div class="service-grid">
+
+                <article class="service-card">
+                    <h3>Watches</h3>
+                    <p>
+                        Explore carefully selected watches, with clear
+                        information about each available timepiece.
+                    </p>
+                </article>
+
+                <article class="service-card">
+                    <h3>Restoration</h3>
+                    <p>
+                        Request an individual assessment and quotation for
+                        your watch restoration requirements.
+                    </p>
+                </article>
+
+                <article class="service-card">
+                    <h3>Customer Care</h3>
+                    <p>
+                        Receive personal communication and order updates from
+                        enquiry through to completion.
+                    </p>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="contact-strip">
+        <h2>Speak to ChronoCraftUK</h2>
+
+        <p>
+            Have a question about a watch or restoration?
+        </p>
+
+        <a class="contact-button"
+           href="mailto:chronocraft.uk@outlook.com">
+            CONTACT US
+        </a>
+    </section>
+
+</main>
+
+<footer>
+    <p><strong>CHRONOCRAFTUK</strong></p>
+    <p>Watches • Restoration • Craftsmanship</p>
+    <p>© 2026 ChronoCraftUK. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
