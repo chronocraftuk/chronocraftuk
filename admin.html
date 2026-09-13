@@ -847,7 +847,23 @@ async function loadOrders() {
             <p><strong>Phone:</strong> ${escapeHtml(order.phone || '')}</p>
             <p><strong>Amount:</strong> ${escapeHtml(String(amount))} ${escapeHtml(currency)}</p>
             <p><strong>Payment:</strong> ${escapeHtml(order.payment_status || '')}</p>
-            <p><strong>Order Status:</strong> ${escapeHtml(order.order_status || '')}</p>
+           <p><strong>Order Status:</strong></p>
+<select class="order-status-select"
+        onchange="updateOrderStatus('${order.id}', this.value)">
+    ${[
+        'New Order',
+        'Payment Confirmed',
+        'Processing',
+        'Ready for Dispatch',
+        'Dispatched',
+        'Delivered',
+        'Cancelled'
+    ].map(status => `
+        <option value="${status}" ${order.order_status === status ? 'selected' : ''}>
+            ${status}
+        </option>
+    `).join('')}
+</select>
             <p><strong>Date:</strong> ${order.created_at ? new Date(order.created_at).toLocaleString() : ''}</p>
         `;
 
@@ -855,7 +871,22 @@ async function loadOrders() {
     });
 }    
 
-function updateStats(data) {
+async function updateOrderStatus(orderId, newStatus) {
+    const { error } = await supabaseClient
+        .from('Watch_Order')
+        .update({ order_status: newStatus })
+        .eq('id', orderId);
+
+    if (error) {
+        console.error('Error updating order status:', error);
+        alert('The order status could not be updated. Please try again.');
+        return;
+    }
+
+    alert('Order status updated successfully.');
+}
+    
+    function updateStats(data) {
     document.getElementById('totalCount').textContent = data.length;
 
     document.getElementById('newCount').textContent =
