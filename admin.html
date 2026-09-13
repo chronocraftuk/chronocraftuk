@@ -913,7 +913,7 @@ async function loadOrders() {
 
     <button type="button"
             class="cancel-order-button"
-            onclick="cancelOrder('${order.id}')">
+           onclick="cancelOrder('${order.id}', this)"> 
         Cancel Order
     </button>
 </div>
@@ -924,7 +924,7 @@ async function loadOrders() {
     });
 }    
 
-async function cancelOrder(orderId) {
+async function cancelOrder(orderId, button) {
     const confirmed = confirm(
         'Are you sure you want to cancel this order? The order will remain saved for your records.'
     );
@@ -933,11 +933,14 @@ async function cancelOrder(orderId) {
         return;
     }
 
+    const orderCard = button.closest('.order-card');
+    const statusSelect = orderCard.querySelector('.order-status-select');
+
+    statusSelect.value = 'Cancelled';
     await updateOrderStatus(orderId, 'Cancelled');
-    location.reload();
 }
-    
-    async function updateOrderStatus(orderId, newStatus) {
+
+async function updateOrderStatus(orderId, newStatus) {
     const { error } = await supabaseClient
         .from('Watch_Order')
         .update({ order_status: newStatus })
