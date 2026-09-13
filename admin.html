@@ -933,18 +933,7 @@ async function cancelOrder(orderId) {
         return;
     }
 
-    const { error } = await supabaseClient
-        .from('Watch_Order')
-        .update({ order_status: 'Cancelled' })
-        .eq('id', orderId);
-
-    if (error) {
-        console.error('Error cancelling order:', error);
-        alert('The order could not be cancelled. Please try again.');
-        return;
-    }
-
-    alert('The order has been cancelled and retained for your records.');
+    await updateOrderStatus(orderId, 'Cancelled');
     location.reload();
 }
     
