@@ -241,8 +241,9 @@ async function loadWatches() {
     const watchList = document.getElementById('watch-list');
 
     const { data, error } = await supabaseClient
-        .from('Watches')
-        .select('*');
+.from('Watches')
+.select('*')
+.neq('status', 'Hidden');
 
     if (error) {
         console.error('Error loading watches:', error);
