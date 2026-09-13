@@ -352,19 +352,36 @@
         name.textContent = watch.name || 'ChronoCraftUK Watch';
         watchDetails.appendChild(name);
 
-        if (watch.price !== null && watch.price !== undefined) {
-            const price = document.createElement('div');
-            price.className = 'watch-price';
-            price.textContent = '£' + Number(watch.price).toFixed(2);
-            watchDetails.appendChild(price);
-            const buyButton = document.createElement('a');
-            buyButton.textContent = 'Buy Now';
-buyButton.href = watch.stripe_link;
-buyButton.target = '_blank';
-buyButton.rel = 'noopener noreferrer';
-buyButton.className = 'buy-button';
-watchDetails.appendChild(buyButton);
-        }
+if (watch.price !== null && watch.price !== undefined) {
+    const price = document.createElement('div');
+    price.className = 'watch-price';
+    price.textContent = '£' + Number(watch.price).toFixed(2);
+    watchDetails.appendChild(price);
+
+    const watchStatus = watch.status || 'Available';
+
+    if (watchStatus === 'Available' && watch.stripe_link) {
+        const buyButton = document.createElement('a');
+        buyButton.textContent = 'Buy Now';
+        buyButton.href = watch.stripe_link;
+        buyButton.target = '_blank';
+        buyButton.rel = 'noopener noreferrer';
+        buyButton.className = 'buy-button';
+        watchDetails.appendChild(buyButton);
+    } else {
+        const statusButton = document.createElement('div');
+        statusButton.textContent =
+            watchStatus === 'Sold'
+                ? 'Sold'
+                : watchStatus === 'Reserved'
+                    ? 'Reserved'
+                    : 'Currently Unavailable';
+        statusButton.className = 'buy-button';
+        statusButton.style.opacity = '0.6';
+        statusButton.style.cursor = 'not-allowed';
+        watchDetails.appendChild(statusButton);
+    }
+}
 
         const description = document.createElement('p');
         description.className = 'watch-description';
